@@ -22,8 +22,8 @@ Usage
 ### Searching for nodes ###
 
     $ puppet dashboard search nodes --class class
-	  $ puppet dashboard search nodes --group group
-	  $ puppet dashboard search nodes --class class --group group
+    $ puppet dashboard search nodes --group group
+    $ puppet dashboard search nodes --class class --group group
 
 ### Listing classes ###
 
@@ -40,7 +40,7 @@ Usage
 Author
 ------
 
-Kelsey Hightower <kelsey.hightower@tsys.com>
+Kelsey Hightower <kelsey.hightower@gmail.com>
 
 
 License
