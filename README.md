@@ -19,6 +19,18 @@ Install puppet-dashboard-face as a module in your Puppet master's module path.
 Usage
 -----
 
+All commands require the follow options:
+
+    --database dashboard_production --host 127.0.0.1 --user dashboard --password dashboard
+    
+Work is on going to allow these option in `/etc/puppet/puppet.conf` like this:
+
+    [dashboard]
+      host = 127.0.0.1
+      user = dashboard
+      password = dashboard
+      database = dashboard_production
+
 ### Searching for nodes ###
 
     $ puppet dashboard search nodes --class class
@@ -36,6 +48,10 @@ Usage
 ### Listing nodes ###
 
     $ puppet dashboard list nodes
+    
+### Report nodes currently failing ###
+
+    $ puppet dashboard report failed
 
 Author
 ------
