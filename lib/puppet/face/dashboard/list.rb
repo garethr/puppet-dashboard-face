@@ -8,7 +8,6 @@ Puppet::Face.define(:dashboard, '0.0.1') do
     returns <<-'EOT'
       A list of nodes, groups, or classes.
     EOT
-    
     examples <<-'EOT'
       Get a list of nodes:
       
@@ -25,8 +24,11 @@ Puppet::Face.define(:dashboard, '0.0.1') do
 
     when_invoked do |kind, options|
       config(options)
-      
-      table_names = { "nodes" => "nodes", "groups" => "node_groups", "classes" => "node_classes" }
+      table_names = { 
+        "nodes"   => "nodes",
+        "groups"  => "node_groups",
+        "classes" => "node_classes"
+      }
       if table_names.has_key?(kind)
         query = "SELECT name from #{table_names[kind]}"
         query_dashboard_db(query)
