@@ -44,7 +44,7 @@ Puppet::Face.define(:dashboard, '0.0.1') do
         return "#{kind} is not a valid search term: [nodes]"
       end
 
-      query = <<-'EOT'
+      query = <<-EOT
       SELECT DISTINCT nodes.name
         FROM (nodes LEFT JOIN node_class_memberships ON node_class_memberships.node_id = nodes.id)
           LEFT JOIN node_classes ON node_class_memberships.node_class_id = node_classes.id

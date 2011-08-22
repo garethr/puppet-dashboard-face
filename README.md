@@ -11,6 +11,9 @@ Requirements
 
 * `puppet` ~> 2.7.0`
 
+## Gems
+* `mysql`
+
 Installation
 ------------
 
