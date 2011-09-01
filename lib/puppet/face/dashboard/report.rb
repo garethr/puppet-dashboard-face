@@ -1,3 +1,5 @@
+require "puppet/face/dashboard/models.rb"
+
 Puppet::Face.define(:dashboard, '0.0.1') do
   action :report do
     summary "Report node status"
@@ -31,10 +33,10 @@ Puppet::Face.define(:dashboard, '0.0.1') do
         :unresponsive
       ]
       if valid_states.include?(status.downcase.to_sym)
-        query = <<-EOT
-          SELECT DISTINCT name FROM nodes WHERE status = '#{status.downcase}'
-        EOT
-        query_dashboard_db(query)
+        DashboardFaceModels::Node.where("status = '#{status.downcase}'").each do |row|
+          puts row.name
+        end
+        return
       else 
         fail "#{status.downcase.to_s} is not a valid state: [#{valid_states.join(', ')}]"
       end

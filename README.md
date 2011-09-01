@@ -13,6 +13,8 @@ Requirements
 
 ## Gems
 * `mysql`
+* `activerecord`
+* `activerecord-jdbcmysql-adapter`
 
 Installation
 ------------
@@ -22,17 +24,19 @@ Install puppet-dashboard-face as a module in your Puppet master's module path.
 Usage
 -----
 
-All commands require the follow options:
-
-    --database dashboard_production --host 127.0.0.1 --user dashboard --password dashboard
-    
-Work is on going to allow these option in `/etc/puppet/puppet.conf` like this:
+### Configuration ###    
+Add the following parameters to `/etc/puppet/puppet.conf`:
 
     [dashboard]
-      host = 127.0.0.1
-      user = dashboard
-      password = dashboard
-      database = dashboard_production
+      dashboard_face_adapter  = mysql
+      dashboard_face_host = 127.0.0.1
+      dashboard_face_database = dashboard_production
+      dashboard_face_username = dashboard
+      dashboard_face_password = dashboard
+      
+You can override database setting on the command line:
+
+    --adapter mysql --host 127.0.0.1 --database dashboard --username user --password password
 
 ### Searching for nodes ###
 

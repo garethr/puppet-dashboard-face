@@ -1,3 +1,5 @@
+require "puppet/face/dashboard/models.rb"
+
 Puppet::Face.define(:dashboard, '0.0.1') do
   action :list do
     summary "List nodes, groups, and classes in Puppet Dashboard"
@@ -25,13 +27,13 @@ Puppet::Face.define(:dashboard, '0.0.1') do
     when_invoked do |kind, options|
       config(options)
       table_names = { 
-        "nodes"   => "nodes",
-        "groups"  => "node_groups",
-        "classes" => "node_classes"
+        "nodes"   => DashboardFaceModels::Node,
+        "groups"  => DashboardFaceModels::NodeGroup,
+        "classes" => DashboardFaceModels::NodeClass
       }
       if table_names.has_key?(kind)
-        query = "SELECT name from #{table_names[kind]}"
-        query_dashboard_db(query)
+        table_names[kind].select("name").each {|row| puts row.name}
+        return
       else
         fail "#{kind} is not a valid search term: [nodes, groups, classes]"
       end

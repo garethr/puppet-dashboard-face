@@ -1,3 +1,5 @@
+require "puppet/face/dashboard/models.rb"
+
 Puppet::Face.define(:dashboard, '0.0.1') do
   action :search do
     summary "Search for nodes in Puppet Dashboard"
@@ -29,7 +31,6 @@ Puppet::Face.define(:dashboard, '0.0.1') do
         The Puppet class name to use when searching for nodes in Puppet Dashboard.
       EOT
     end
-
     option "--group GROUP" do
       summary "Puppet Dashboard group name"
       description <<-'EOT'
@@ -39,30 +40,23 @@ Puppet::Face.define(:dashboard, '0.0.1') do
 
     when_invoked do |kind, options|
       config(options)
-        
+      # Right now we only support searching for nodes based on class
+      # and group membership.
       if not ['nodes'].include?(kind)
         return "#{kind} is not a valid search term: [nodes]"
       end
-
-      query = <<-EOT
-      SELECT DISTINCT nodes.name
-        FROM (nodes LEFT JOIN node_class_memberships ON node_class_memberships.node_id = nodes.id)
-          LEFT JOIN node_classes ON node_class_memberships.node_class_id = node_classes.id
-          LEFT JOIN node_group_memberships ON node_group_memberships.node_id = nodes.id
-          LEFT JOIN node_groups ON node_group_memberships.node_group_id = node_groups.id
-      EOT
-      
-      if @class and @group.nil?
-          where_clause = " WHERE node_classes.name = '#{@class}'"
-      elsif @group and @class.nil?
-          where_clause = " WHERE node_groups.name = '#{@group}'"
-      elsif @class and @group
-          where_clause = " WHERE node_classes.name = '#{@class}' AND node_groups.name = '#{@group}'"
-      else
-          fail "No query params"
+      where_clauses = {}
+      joins = {}
+      if @class
+        joins[:node_class_memberships] = :node_class
+        where_clauses[:node_classes] = {:name => @class}
       end
-      query += where_clause
-      query_dashboard_db(query)
+      if @group
+        joins[:node_group_memberships] = :node_group
+        where_clauses[:node_groups] = {:name => @group}
+      end
+      DashboardFaceModels::Node.joins(joins).where(where_clauses).each {|node| puts node.name}
+      return
     end
   end
 end
